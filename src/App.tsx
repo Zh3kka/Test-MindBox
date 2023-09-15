@@ -1,19 +1,10 @@
 import React, { useState } from "react";
 import "./styles.css";
+import TodoList from "./components/TodoList";
+import FilterButtons from "./components/FilterButtons"
+import { Filter, Todo } from "./types/todo.type";
 
-type Todo = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
-
-enum Filter {
-  All = "all",
-  Active = "active",
-  Completed = "completed",
-}
-
-const App = () => {
+const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodoText, setNewTodoText] = useState("");
   const [filter, setFilter] = useState(Filter.All);
@@ -55,6 +46,7 @@ const App = () => {
       addTodo();
     }
   };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">ToDo приложение для Mindbox</h1>
@@ -74,70 +66,8 @@ const App = () => {
           Добавить задачу
         </button>
       </div>
-      <div className="mb-4">
-        <button
-          onClick={() => setFilter(Filter.All)}
-          className={`mr-2 ${
-            filter === Filter.All
-              ? "bg-blue-500 text-white hover:bg-blue-700 transition"
-              : "bg-gray-300 hover:bg-gray-400 transition"
-          } px-4 py-2 rounded`}
-        >
-          Все
-        </button>
-        <button
-          onClick={() => setFilter(Filter.Active)}
-          className={`mr-2 ${
-            filter === Filter.Active
-              ? "bg-blue-500 text-white hover:bg-blue-700 transition"
-              : "bg-gray-300 hover:bg-gray-400 transition"
-          } px-4 py-2 rounded`}
-        >
-          Активные
-        </button>
-        <button
-          onClick={() => setFilter(Filter.Completed)}
-          className={`mr-2 ${
-            filter === Filter.Completed
-              ? "bg-blue-500 text-white hover:bg-blue-700 transition"
-              : "bg-gray-300 hover:bg-gray-400 transition"
-          } px-4 py-2 rounded `}
-        >
-          Выполненные
-        </button>
-        <button
-          onClick={() => setTodos([])}
-          className="mr-2  px-4 py-2 rounded hover:text-red-500 transition "
-        >
-          Очистить
-        </button>
-      </div>
-      <div>
-        <h2 className="text-lg font-bold mb-2">Задачи</h2>
-        <ul>
-          {filteredTodos.map((todo) => (
-            <li key={todo.id} className="flex items-center mb-2">
-              <span
-                className={`flex-grow ${todo.completed ? "line-through" : ""}`}
-              >
-                {todo.text}
-              </span>
-              <button
-                onClick={() => toggleTodo(todo.id)}
-                className="text-blue-500 hover:text-blue-600 mr-2"
-              >
-                {todo.completed ? "Не выполнено" : "Выполнено"}
-              </button>
-              <button
-                onClick={() => deleteTodo(todo.id)}
-                className="text-red-500 hover:text-red-800"
-              >
-                Удалить
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <FilterButtons filter={filter} setFilter={setFilter} setTodos={() => setTodos([])}/>
+      <TodoList todos={filteredTodos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
     </div>
   );
 };
